@@ -123,7 +123,10 @@ class dirIX(object):
         for member in self.data['member_list']:
             member_data = _get_simple_items(member)
             for connection in member['connection_list']:
-                 for vlan in connection['vlan_list']:
+                if isinstance(connection['vlan_list'], dict):
+                    # patch AMS-IX's JSON dump
+                    connection['vlan_list'] = [connection['vlan_list']]
+                for vlan in connection['vlan_list']:
                     if ipv_str not in vlan: continue
                     vlan_data = _get_simple_items(vlan['ipv4'])
                     vlan_data.update(member_data)
